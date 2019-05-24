@@ -1,0 +1,25 @@
+extends ../layout.pug
+block othercss
+    link(rel='stylesheet', href='/stylesheets/business/admin.css')
+block content
+    div(id="worksarea" v-bind:style="{height: calcHeight + 'px'}" class="div-border")
+        el-container(v-bind:style="{height: containerHeight + 'px'}")
+            el-aside(v-bind:style="{height: asideHeight + 'px'}")
+                <el-menu :default-openeds="['1','2']">
+                    <el-submenu index="1">
+                        <template slot="title"><i class="el-icon-menu"></i>统计数据</template>
+                        <el-menu-item-group>
+                            <el-menu-item index="1-1">详细列表</el-menu-item>
+                            <el-menu-item index="1-2">分时汇总</el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <el-submenu index="2">
+                        <template slot="title"><i class="el-icon-setting"></i>系统设置</template>
+                        <el-menu-item-group>
+                            <el-menu-item index="2-1">用户管理</el-menu-item>
+                            <el-menu-item index="2-2">保留项目</el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                </el-menu>
+            el-main(v-bind:style="{height: mainHeight + 'px'}") 456
+    script(src="/javascripts/business/admin.js")

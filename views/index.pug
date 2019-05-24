@@ -1,0 +1,23 @@
+extends layout.pug
+
+block content
+ 
+  div(id="maindoor" style="width:400px;height:300px;margin:auto;position:absolute;left:0;right:0")
+    el-row
+      el-col(:span="24")
+        div(style="font-size:2em;text-align:center;margin-bottom:10px") 贷超管理平台
+    el-row(style="margin-top:0.8em;")
+      el-col(:span="24" style="text-align:center;")
+        span 账号
+        el-input(v-model="acc",placeholder="请输入用户名",style="width:210px;margin-left:15px;",type="input")
+    el-row(style="margin:5px;")
+      el-col(:span="24" style="text-align:center;")
+        span 密码
+        el-input(v-model="pwd",placeholder="请输入密码",show-password,style="width:210px;margin-left:15px;",type="input")
+    el-row(style="margin-top:0.5em;")
+      el-col(:span="24" style="text-align:center;")
+        el-button(@click="login") 登录
+        el-button(@click="reset") 重置
+ 
+  script(src='/javascripts/business/index.js')
+
