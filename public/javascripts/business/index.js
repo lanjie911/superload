@@ -11,8 +11,30 @@ let business = {
             alert("请输入密码");
             return;
         }
+        //here is browser output
         console.log("vAcc is %s and vPwd is %s", vAcc, vPwd);
-        window.location.href = "/admin/login";
+        //here we need a ajax req
+        axios.post("/login", {
+            acc: vAcc,
+            pwd: vPwd
+        }
+        ).then(function (resp) {
+            console.log(resp.data);
+            let rsdata = resp.data;
+            if (rsdata.rs == "LoginError") {
+                alert("账号或密码错误");
+                return;
+            }
+            if (rsdata.rs == "LoginOK") {
+                window.location.href = "/admin/login";
+                return;
+            }
+            alert("未知错误");
+            return;
+        }).catch(resp => {
+            console.log('请求失败：' + resp.status + ',' + resp.statusText);
+        });
+
     }
 
 };

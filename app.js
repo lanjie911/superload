@@ -1,8 +1,21 @@
+//npm install axios
+//npm install express
+//npm install express-session
+//npm install express-session memorystore
+//npm install multer
+//npm install body-parser
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
+// 定义JSON参数处理
+var bodyParser = require('body-parser');
+var multer = require('multer'); // v1.0.5
+// for parsing multipart/form-data
+var upload = multer(); 
+
 
 // 定义session
 var session = require('express-session');
@@ -39,12 +52,17 @@ app.set('view engine', 'pug');
 // combined common dev short tiny
 app.use(logger('combined'));
 // 记得上产线的时候把下面的代码打开
-// app.use(logger('combined', { stream: accessLogStream }));
+app.use(logger('combined', { stream: accessLogStream }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// for parsing application/json
+app.use(bodyParser.json()); 
+// for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 // 定义session管理器，这个管理器一定要放到所有的路由设定之前
 app.use(session({

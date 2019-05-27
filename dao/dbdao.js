@@ -1,11 +1,11 @@
-var mysql = require('mysql');
+let mysql = require('mysql');
 
 // 创建 mysql 连接池资源
-var pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'test'
+let pool = mysql.createPool({
+    host: '192.168.223.129',
+    user: 'nodeuser',
+    password: 'nodeuser123!',
+    database: 'daichao'
 });
 
 exports.query = function (sql, arr, callback) {
