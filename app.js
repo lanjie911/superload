@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// 定义session
+var session = require('express-session');
+var MemoryStore = require('memorystore')(session);
+
 // 定义日志滚动输出
 var fs = require('fs')
 var FileStreamRotator = require('file-stream-rotator')
@@ -42,10 +46,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 定义session管理器，这个管理器一定要放到所有的路由设定之前
+app.use(session({
+  cookie: { maxAge: 86400000 },
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
+  secret: 'apaydayloadpl',
+  saveUninitialized: false,
+  resave: false
+}));
+
 // 路由的映射根路径
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/admin',adminRouter);
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -12,7 +12,7 @@ let business = {
             return;
         }
         console.log("vAcc is %s and vPwd is %s", vAcc, vPwd);
-        window.location.href = "/admin/";
+        window.location.href = "/admin/login";
     }
 
 };
