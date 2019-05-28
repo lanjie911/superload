@@ -4,15 +4,19 @@ let vInst = new Vue({
         uiHeight: 100,
         uiMargin: 160,
         editableTabs: [],
-        activeTabIndex: "0"
+        activeTabIndex: "0",
+        pageSize: 10,
+        totalCount: 0,
+        currentPage: 1,
+        reqDataSet: []
     },
     created: function () {
         this.uiHeight = document.documentElement.clientHeight;
         console.info("body height is %s", this.uiHeight);
     },
-    mounted: function(){
-        console.log("mounted...")
-       // this.qryRequestList();
+    mounted: function () {
+        console.log("mounted...refresh req list");
+        this.qryRequestList(1);
     },
     computed: {
         calcHeight: function () {
@@ -29,14 +33,46 @@ let vInst = new Vue({
         }
     },
     methods: {
-        checkTabsExist:function(tabIdx){
-            for(let i=0;i<this.editableTabs.length;i++) {
+        checkTabsExist: function (tabIdx) {
+            for (let i = 0; i < this.editableTabs.length; i++) {
                 let element = this.editableTabs[i];
-                if(element.name == tabIdx){
+                if (element.name == tabIdx) {
                     return true;
                 }
             }
             return false;
+        },
+        gofunc: function (idx) {
+            document.getElementById("tab-" + idx).click();
+        },
+        goPage: function (pageNumber) {
+            //console.log(pageNumber);
+            this.qryRequestList(pageNumber);
+        },
+        qryRequestList: function (pageNumber) {
+            axios.get("admin/qryreqlist", {
+                params: {
+                    limit: 10,
+                    offset: (pageNumber-1) * 10
+                }
+            }
+            ).then(function (resp) {
+                //console.log(resp.data);
+                let rsdata = resp.data;
+                if (rsdata.rs == "ERROR") {
+                    alert("服务器内部错误");
+                    return [];
+                }
+                if (rsdata.rs == "OK") {
+                    vInst.reqDataSet = rsdata.rsArray;
+                    vInst.totalCount = rsdata.total;
+                    return;
+                }
+                alert("未知错误");
+                return [];
+            }).catch(resp => {
+                console.log('请求失败：' + resp.status + ',' + resp.statusText);
+            });
         }
     }
 });

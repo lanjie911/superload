@@ -2,8 +2,8 @@ extends layout.pug
 
 block content
  
-  div(id="maindoor" style="width:400px;height:300px;margin:auto;position:absolute;left:0;right:0")
-    el-row
+  div(id="maindoor" style="width:400px;height:300px;margin:auto;position:absolute;left:0;right:0" onkeyup="keyLogin();")
+    el-row()
       el-col(:span="24")
         div(style="font-size:2em;text-align:center;margin-bottom:10px") 贷超管理平台
     el-row(style="margin-top:0.8em;")

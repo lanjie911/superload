@@ -5,3 +5,12 @@
 .titlea {
     font-size: 4em;
 }
+
+.rqpagination {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.cell {
+    text-align: center;
+}

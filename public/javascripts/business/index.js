@@ -38,6 +38,13 @@ let business = {
     }
 
 };
+
+let keyLogin = function(){
+    if(event.keyCode == 13){
+        vIns.login();
+    }
+}
+
 let vIns = new Vue(
     {
         el: "#maindoor",

@@ -66,9 +66,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // 定义session管理器，这个管理器一定要放到所有的路由设定之前
 app.use(session({
-  cookie: { maxAge: 86400000 },
+  cookie: { maxAge: 3000000 },
   store: new MemoryStore({
-    checkPeriod: 86400000 // prune expired entries every 24h
+    checkPeriod: 3000000 // prune expired entries every 24h
   }),
   secret: 'apaydayloadpl',
   saveUninitialized: false,

@@ -14,19 +14,32 @@ block content
                             i(class="el-icon-menu")
                             span 统计数据
                         el-menu-item-group
-                            el-menu-item(index="1-1" @click="qryRequestList") 请求列表
-                            el-menu-item(index="1-2" @click="sumReport") 分时汇总
+                            el-menu-item(index="1-1" @click="gofunc(0)") 请求列表
+                            el-menu-item(index="1-2" @click="gofunc(1)") 分时汇总
                     el-submenu(index="2")
                         template(slot="title")
                             i(class="el-icon-setting")
                             span 系统设置
                         el-menu-item-group
-                            el-menu-item(index="2-1") 用户管理
-                            el-menu-item(index="2-1") 重置密码
+                            el-menu-item(index="2-1" @click="gofunc(2)") 商户管理
+                            el-menu-item(index="2-1" @click="gofunc(3)") 用户管理
+                            el-menu-item(index="2-1" @click="gofunc(4)") 重置密码
             el-main(v-bind:style="{height: mainHeight + 'px'}")
-                el-tabs(v-model="activeTabIndex" type="card" @tab-remove="removeTab")
+                el-tabs(v-model="activeTabIndex" type="card")
                     el-tab-pane(label="请求列表")
-                    el-tab-pane(label="分时汇总")
-                    el-tab-pane(label="用户管理")
-                    el-tab-pane(label="重置密码")
+                        el-table(border style="width:100%" :data="reqDataSet")
+                            el-table-column(label="请求编号" width="180" class="column-title" prop="req_id")
+                            el-table-column(label="商户名称" width="180" class="column-title" prop="merchant_name")
+                            el-table-column(label="请求时间" width="180" class="column-title" prop="req_time")
+                            el-table-column(label="报文信息" prop="raw_msg")
+                            el-table-column(label="应答结果" width="180" class="column-title" prop="rs_status")
+                        el-pagination(:current-page="currentPage" :page-size="pageSize" layout="prev, pager, next, jumper" :total="totalCount" class="rqpagination" @current-change="goPage")
+                    el-tab-pane(label="分时汇总" tab-click="clickTab")
+                        div(style='border:1px solid red') MyGrid2
+                    el-tab-pane(label="商户管理" tab-click="clickTab")
+                        div(style='border:1px solid red') MyGrid3
+                    el-tab-pane(label="用户管理" tab-click="clickTab")
+                        div(style='border:1px solid red') MyGrid3
+                    el-tab-pane(label="重置密码" tab-click="clickTab")
+                        div(style='border:1px solid red') MyGrid4
     script(src="/javascripts/business/admin.js")
