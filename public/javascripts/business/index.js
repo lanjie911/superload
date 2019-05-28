@@ -26,7 +26,7 @@ let business = {
                 return;
             }
             if (rsdata.rs == "LoginOK") {
-                window.location.href = "/admin/login";
+                window.location.href = "/admin/login?user_acc="+rsdata.user_acc;
                 return;
             }
             alert("未知错误");

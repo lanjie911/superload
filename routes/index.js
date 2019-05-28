@@ -20,7 +20,7 @@ router.post('/login', function (req, res, next) {
 
   console.log("acc %s login and pwd is %s", acc, pwd);
 
-  let qryString = "select user_id from admin where user_acc=? and user_pwd=?";
+  let qryString = "select user_id,user_acc from admin where user_acc=? and user_pwd=?";
   let qryParams = [acc, pwd];
   let callbackfunc = function (rs, fds) {
     if(rs && rs.length > 0){
@@ -28,7 +28,7 @@ router.post('/login', function (req, res, next) {
       console.log("user id is %s",record.user_id);
       //增加session
       req.session.login_id = record.user_id
-      res.json({ rs: 'LoginOK' });
+      res.json({ rs: 'LoginOK', "user_acc":record.user_acc });
       return;
     }
     res.json({ rs: 'LoginError' });

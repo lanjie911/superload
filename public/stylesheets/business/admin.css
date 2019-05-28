@@ -14,3 +14,9 @@
 .cell {
     text-align: center;
 }
+
+.datepicker {
+    margin-bottom: 20px;
+    margin-right: 25px;
+    margin-left:20px;
+}

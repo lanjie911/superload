@@ -8,7 +8,10 @@ let vInst = new Vue({
         pageSize: 10,
         totalCount: 0,
         currentPage: 1,
-        reqDataSet: []
+        reqDataSet: [],
+        merchantName: "",
+        requestBeginDate: "",
+        requestEndDate: ""
     },
     created: function () {
         this.uiHeight = document.documentElement.clientHeight;
@@ -49,14 +52,33 @@ let vInst = new Vue({
             //console.log(pageNumber);
             this.qryRequestList(pageNumber);
         },
+        clearSearchConditions: function () {
+            this.merchantName = "";
+            this.requestBeginDate = "";
+            this.requestEndDate = "";
+        },
+        qryWithCondition: function () {
+            this.qryRequestList(1);
+        },
         qryRequestList: function (pageNumber) {
-            axios.get("admin/qryreqlist", {
-                params: {
-                    limit: 10,
-                    offset: (pageNumber-1) * 10
-                }
+            let rand = new Date().getTime();
+            let obParas = {
+                limit: 10,
+                offset: (pageNumber - 1) * 10,
+                randstamp: rand
+            };
+            if(this.merchantName != ""){
+                obParas.paraName = this.merchantName;
             }
-            ).then(function (resp) {
+            if(this.requestBeginDate != ""){
+                obParas.paraBeginDate = this.requestBeginDate;
+            }
+            if(this.requestEndDate != ""){
+                obParas.paraEndDate = this.requestEndDate;
+            }
+            axios.get("admin/qryreqlist", {
+                params: obParas
+            }).then(function (resp) {
                 //console.log(resp.data);
                 let rsdata = resp.data;
                 if (rsdata.rs == "ERROR") {
