@@ -22,11 +22,11 @@ block content
                             span 系统设置
                         el-menu-item-group
                             el-menu-item(index="2-1" @click="gofunc(2)") 商户管理
-                            el-menu-item(index="2-1" @click="gofunc(3)") 用户管理
-                            el-menu-item(index="2-1" @click="gofunc(4)") 重置密码
+                            el-menu-item(index="2-2" @click="gofunc(3)") 用户管理
+                            el-menu-item(index="2-3" @click="gofunc(4)") 重置密码
             el-main(v-bind:style="{height: mainHeight + 'px'}")
-                el-tabs(v-model="activeTabIndex" type="card")
-                    el-tab-pane(label="请求列表")
+                el-tabs(v-model="activeTabIndex" type="card" closable=true @tab-remove="tabRemoved")
+                    el-tab-pane(label="请求列表" name="0")
                         el-input(placeholder="请输入商户名称" style="width:180px" v-model="merchantName")
                         <!--如果不绑定value-format，那么这个控件默认输出的是Date对象-->
                         el-date-picker(align="right" type="date" placeholder="选择开始日期" class="datepicker" v-model="requestBeginDate" value-format="yyyy-MM-dd")
@@ -40,12 +40,25 @@ block content
                             el-table-column(label="报文信息" prop="raw_msg")
                             el-table-column(label="应答结果" width="180" class="column-title" prop="rs_status")
                         el-pagination(:current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" class="rqpagination" @current-change="goPage")
-                    el-tab-pane(label="分时汇总" tab-click="clickTab")
-                        div(style='border:1px solid red') 老板你需要什么样的报表啊
-                    el-tab-pane(label="商户管理" tab-click="clickTab")
-                        div(style='border:1px solid red') 目前手工插入商户也是可以的啊
-                    el-tab-pane(label="用户管理" tab-click="clickTab")
-                        div(style='border:1px solid red') 目前手工插入后台管理用户也是可以的啊
-                    el-tab-pane(label="重置密码" tab-click="clickTab")
-                        div(style='border:1px solid red') 目前手工重置密码也是可以的啊
+                    el-tab-pane(label="分时汇总" name="1") 老板你需要什么样的报表啊
+                    el-tab-pane(label="商户管理" name="2")
+                        span 目前手工插入商户也是可以的啊
+                    el-tab-pane(label="用户管理" name="3")
+                        span 目前手工插入后台管理用户也是可以的啊
+                    el-tab-pane(label="重置密码" name="4")
+                        el-row(class="rowclaz")
+                            el-col(:span="24")
+                                el-input(v-model="oldPwd",placeholder="请输入原始密码",show-password,style="width:300px;margin-left:15px;",type="input")
+                                    template(slot="prepend") 旧的密码
+                        el-row(class="rowclaz")
+                            el-col(:span="24")
+                                el-input(v-model="newPwd",placeholder="请输入新密码",show-password,style="width:300px;margin-left:15px;",type="input")
+                                    template(slot="prepend") 新的密码
+                        el-row(class="rowclaz")
+                            el-col(:span="24")
+                                el-input(v-model="newPwdAffirm",placeholder="请再次输入新密码",show-password,style="width:300px;margin-left:15px;",type="input")
+                                    template(slot="prepend") 确认密码
+                        el-row
+                            el-col(:span="24")
+                                el-button(@click="goResetPwd" style="margin-left:130px;") 确定
     script(src="/javascripts/business/admin.js")

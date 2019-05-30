@@ -1,17 +1,50 @@
-let vInst = new Vue({
+let vInst = null;
+
+// 处理请求列表的数据
+let handleReqQryResult = function (resp) {
+    //console.log(resp.data);
+    let rsdata = resp.data;
+    if (rsdata.rs == "ERROR") {
+        alert("服务器内部错误");
+        return [];
+    }
+    if (rsdata.rs == "OK") {
+        if(!rsdata.rsArray){
+            alert("没有查询到数据");
+            return;
+        }
+        if(rsdata.rsArray.length == 0){
+            alert("没有查询到数据");
+            return;
+        }
+        vInst.reqDataSet = rsdata.rsArray;
+        vInst.totalCount = rsdata.total;
+        return;
+    }
+    alert("未知错误");
+    return [];
+};
+
+vInst = new Vue({
     el: "#worksarea",
     data: {
         uiHeight: 100,
         uiMargin: 160,
-        editableTabs: [],
         activeTabIndex: "0",
+
+        //请求列表属性
         pageSize: 10,
         totalCount: 0,
         currentPage: 1,
         reqDataSet: [],
         merchantName: "",
         requestBeginDate: "",
-        requestEndDate: ""
+        requestEndDate: "",
+
+        //修改密码数据
+        oldPwd: "",
+        newPwd: "",
+        newPwdAffirm: ""
     },
     created: function () {
         this.uiHeight = document.documentElement.clientHeight;
@@ -46,11 +79,19 @@ let vInst = new Vue({
             return false;
         },
         gofunc: function (idx) {
+            document.getElementById("tab-" + idx).style.display = "";
+            document.getElementById("pane-" + idx).style.display = "";
             document.getElementById("tab-" + idx).click();
         },
         goPage: function (pageNumber) {
             //console.log(pageNumber);
             this.qryRequestList(pageNumber);
+        },
+        // 关闭标签
+        tabRemoved: function (tabIdx) {
+            console.log("tab index is %s", tabIdx);
+            document.getElementById("tab-" + tabIdx).style.display = "none";
+            document.getElementById("pane-" + tabIdx).style.display = "none";
         },
         clearSearchConditions: function () {
             this.merchantName = "";
@@ -67,34 +108,23 @@ let vInst = new Vue({
                 offset: (pageNumber - 1) * 10,
                 randstamp: rand
             };
-            if(this.merchantName != ""){
+            if (this.merchantName != "") {
                 obParas.paraName = this.merchantName;
             }
-            if(this.requestBeginDate != ""){
+            if (this.requestBeginDate != "") {
                 obParas.paraBeginDate = this.requestBeginDate;
             }
-            if(this.requestEndDate != ""){
+            if (this.requestEndDate != "") {
                 obParas.paraEndDate = this.requestEndDate;
             }
             axios.get("admin/qryreqlist", {
                 params: obParas
-            }).then(function (resp) {
-                //console.log(resp.data);
-                let rsdata = resp.data;
-                if (rsdata.rs == "ERROR") {
-                    alert("服务器内部错误");
-                    return [];
-                }
-                if (rsdata.rs == "OK") {
-                    vInst.reqDataSet = rsdata.rsArray;
-                    vInst.totalCount = rsdata.total;
-                    return;
-                }
-                alert("未知错误");
-                return [];
-            }).catch(resp => {
+            }).then(handleReqQryResult).catch(resp => {
                 console.log('请求失败：' + resp.status + ',' + resp.statusText);
             });
+        },
+        goResetPwd: function () {
+
         }
     }
 });
