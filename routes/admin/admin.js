@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
 let dbUtil = require("../../dao/dbdao");
+let md5Util = require("../../util/md5");
 
 /* GET admin listing. */
 router.get('/', function (req, res, next) {
-    let login = req.session.login;
-    if (!login) {
+    if (!req.session.loginAdmin) {
         res.send("You haven't login the system!");
         return;
     }
@@ -14,8 +14,11 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/login', function (req, res, next) {
-    req.session.login = true;
-    res.redirect("/admin?user_acc=" + req.query.user_acc);
+    if (req.session.loginAdmin) {
+        res.redirect("/admin?user_acc=" + req.query.user_acc);
+        return;
+    }
+    res.send("You haven't login the system!");
 });
 
 router.get('/logout', function (req, res, next) {
@@ -25,10 +28,36 @@ router.get('/logout', function (req, res, next) {
     res.redirect("../");
 });
 
+router.post('/resetpwd', function (req, res, next) {
+    if (!req.session.loginAdmin) {
+        res.send("{rs:'FAILED'}");
+        return;
+    }
+    console.warn("admin %s is modifing password now.", req.session.loginAdmin.adminId);
+    let jsonRs = {};
+    jsonRs.rs = 'OK';
+
+    let oldPwd = md5Util.md5(req.body.oldPwd);
+    let newPwd = md5Util.md5(req.body.newPwd);
+    console.log("[SQL Param]<oldPwd> is %s", oldPwd);
+    console.log("[SQL Param]<newPwd> is %s", newPwd);
+
+    let updateSQL = "UPDATE admin SET user_pwd=? WHERE user_id=? and user_pwd=?";
+    let params = [newPwd, req.session.loginAdmin.adminId, oldPwd];
+
+    dbUtil.execute(updateSQL, params, function (exeResult) {
+        if(exeResult.affectedRows == 1){
+            jsonRs.rs = 'OK';
+        }else{
+            jsonRs.rs = 'ERROR';
+        }
+        res.json(jsonRs);
+    });
+});
+
 // 查询访问明细
 router.get('/qryreqlist', function (req, res, next) {
-    let login = req.session.login;
-    if (!login) {
+    if (!req.session.loginAdmin) {
         res.send("{rs:'FAILED'}");
         return;
     }
@@ -41,17 +70,17 @@ router.get('/qryreqlist', function (req, res, next) {
     let qryParams = [];
     if (req.query.paraName && req.query.paraName != "") {
         qryString += " and b.merchant_name like ? ";
-        qryCount  += " and b.merchant_name like ? ";
+        qryCount += " and b.merchant_name like ? ";
         qryParams.push("%" + req.query.paraName + "%");
     }
     if (req.query.paraBeginDate && req.query.paraBeginDate != "") {
         qryString += " and a.req_time >= str_to_date(?,'%Y-%m-%d %H:%i:%s') ";
-        qryCount  += " and a.req_time >= str_to_date(?,'%Y-%m-%d %H:%i:%s') ";
+        qryCount += " and a.req_time >= str_to_date(?,'%Y-%m-%d %H:%i:%s') ";
         qryParams.push(req.query.paraBeginDate + " 00:00:00");
     }
     if (req.query.paraEndDate && req.query.paraEndDate != "") {
         qryString += " and a.req_time <= str_to_date(?,'%Y-%m-%d %H:%i:%s') ";
-        qryCount  += " and a.req_time <= str_to_date(?,'%Y-%m-%d %H:%i:%s') ";
+        qryCount += " and a.req_time <= str_to_date(?,'%Y-%m-%d %H:%i:%s') ";
         qryParams.push(req.query.paraEndDate + " 23:59:59");
     }
     qryString += " limit " + req.query.limit + " offset " + req.query.offset;
@@ -62,7 +91,7 @@ router.get('/qryreqlist', function (req, res, next) {
     jsonRs.rs = "ERROR";
 
     // 回调深渊开始
-    
+
     // 查总数的回调
     let callbackfunc2 = function (rs, fds) {
         if (rs && rs.length > 0) {

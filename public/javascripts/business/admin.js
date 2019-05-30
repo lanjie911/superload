@@ -9,11 +9,11 @@ let handleReqQryResult = function (resp) {
         return [];
     }
     if (rsdata.rs == "OK") {
-        if(!rsdata.rsArray){
+        if (!rsdata.rsArray) {
             alert("没有查询到数据");
             return;
         }
-        if(rsdata.rsArray.length == 0){
+        if (rsdata.rsArray.length == 0) {
             alert("没有查询到数据");
             return;
         }
@@ -124,7 +124,33 @@ vInst = new Vue({
             });
         },
         goResetPwd: function () {
-
+            let oldPwd = this.oldPwd;
+            let newPwd = this.newPwd;
+            let newPwdAffirm = this.newPwdAffirm;
+            if (oldPwd == "" || oldPwd == "请输入原始密码") {
+                alert("请输入原始密码名");
+                return;
+            }
+            if (newPwd == "" || newPwd == "请输入新密码") {
+                alert("请输入新密码");
+                return;
+            }
+            if (newPwdAffirm == "" || newPwdAffirm == "请再次输入新密码") {
+                alert("请再次输入新密码");
+                return;
+            }
+            if (newPwd != newPwdAffirm) {
+                alert("新密码两次输入不一致");
+                return;
+            }
+            axios.post("admin/resetpwd", {
+                oldPwd: oldPwd,
+                newPwd: newPwd
+            }).then(function (resp) {
+                alert(resp.data.rs);
+            }).catch(resp => {
+                console.log('请求失败：' + resp.status + ',' + resp.statusText);
+            });
         }
     }
 });

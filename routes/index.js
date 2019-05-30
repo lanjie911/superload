@@ -27,7 +27,8 @@ router.post('/login', function (req, res, next) {
       let record = rs[0];
       console.log("user id is %s",record.user_id);
       //增加session
-      req.session.login_id = record.user_id
+      req.session.loginAdmin = {};
+      req.session.loginAdmin.adminId = record.user_id
       res.json({ rs: 'LoginOK', "user_acc":record.user_acc });
       return;
     }
