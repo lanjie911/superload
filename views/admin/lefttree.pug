@@ -1,0 +1,23 @@
+el-menu(:default-openeds="['1','2','3']" v-bind:style="{height: asideHeight + 'px'}" collapse=false)
+    el-submenu(index="1")
+        template(slot="title")
+            i(class="el-icon-menu")
+            span 统计数据
+        el-menu-item-group
+            el-menu-item(index="1-1" @click="gofunc(0)") 请求列表
+            el-menu-item(index="1-2" @click="gofunc(1)") 分时汇总
+    el-submenu(index="2")
+        template(slot="title")
+            i(class="el-icon-setting")
+            span 系统设置
+        el-menu-item-group
+            el-menu-item(index="2-1" @click="gofunc(2)") 商户管理
+            el-menu-item(index="2-2" @click="gofunc(3)") 用户管理
+            el-menu-item(index="2-3" @click="gofunc(4)") 重置密码
+    el-submenu(index="3")
+        template(slot="title")
+            i(class="el-icon-s-promotion")
+            span 群发管理
+        el-menu-item-group
+            el-menu-item(index="3-1" @click="gofunc(5)") 新建群发
+            el-menu-item(index="3-2") 群发列表

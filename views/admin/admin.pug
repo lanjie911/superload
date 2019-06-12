@@ -8,24 +8,9 @@ block content
     div(id="worksarea" v-bind:style="{height: calcHeight + 'px'}" class="div-border")
         el-container(v-bind:style="{height: containerHeight + 'px'}")
             el-aside(v-bind:style="{height: asideHeight + 'px'}")
-                el-menu(:default-openeds="['1','2']" v-bind:style="{height: asideHeight + 'px'}" collapse=false)
-                    el-submenu(index="1")
-                        template(slot="title")
-                            i(class="el-icon-menu")
-                            span 统计数据
-                        el-menu-item-group
-                            el-menu-item(index="1-1" @click="gofunc(0)") 请求列表
-                            el-menu-item(index="1-2" @click="gofunc(1)") 分时汇总
-                    el-submenu(index="2")
-                        template(slot="title")
-                            i(class="el-icon-setting")
-                            span 系统设置
-                        el-menu-item-group
-                            el-menu-item(index="2-1" @click="gofunc(2)") 商户管理
-                            el-menu-item(index="2-2" @click="gofunc(3)") 用户管理
-                            el-menu-item(index="2-3" @click="gofunc(4)") 重置密码
+                include lefttree.pug
             el-main(v-bind:style="{height: mainHeight + 'px'}")
-                el-tabs(v-model="activeTabIndex" type="card" closable=true @tab-remove="tabRemoved")
+                el-tabs(v-model="activeTabIndex" type="card" closable=true @tab-remove="tabRemoved" @tab-click="tabSelected")
                     el-tab-pane(label="请求列表" name="0")
                         el-input(placeholder="请输入商户名称" style="width:180px" v-model="merchantName")
                         <!--如果不绑定value-format，那么这个控件默认输出的是Date对象-->
@@ -61,4 +46,6 @@ block content
                         el-row
                             el-col(:span="24")
                                 el-button(@click="goResetPwd" style="margin-left:130px;") 确定
+                    el-tab-pane(label="群发任务" name="5")
+                        include newmarketing.pug
     script(src="/javascripts/business/admin.js")

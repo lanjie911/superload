@@ -44,7 +44,14 @@ vInst = new Vue({
         //修改密码数据
         oldPwd: "",
         newPwd: "",
-        newPwdAffirm: ""
+        newPwdAffirm: "",
+
+        // 执行群发短信任务
+        groupMarketing: {
+            merchantList: [],
+            uplodeFile: "",
+            uploadMerchantId: 0
+        }
     },
     created: function () {
         this.uiHeight = document.documentElement.clientHeight;
@@ -92,6 +99,22 @@ vInst = new Vue({
             console.log("tab index is %s", tabIdx);
             document.getElementById("tab-" + tabIdx).style.display = "none";
             document.getElementById("pane-" + tabIdx).style.display = "none";
+        },
+        // 标签被选中
+        tabSelected: function (tabObj) {
+            let idx = tabObj.index;
+            if(5 == idx){
+                // 切换到群发任务
+                // 刷新商户数组
+                axios.get("/task/qrymerchants", {
+                    params: {}
+                }).then(function(res){
+                    console.log(res);
+                    vInst.groupMarketing.merchantList = res.data.rs;
+                }).catch(resp => {
+                    console.log('请求失败：' + resp.status + ',' + resp.statusText);
+                });
+            }
         },
         clearSearchConditions: function () {
             this.merchantName = "";
@@ -151,6 +174,12 @@ vInst = new Vue({
             }).catch(resp => {
                 console.log('请求失败：' + resp.status + ',' + resp.statusText);
             });
+        },
+
+        //上传文件
+        uploadTask: function(){
+            let merchantId = this.groupMarketing.uploadMerchantId;
+            console.log("TO BE DONE...")
         }
     }
 });

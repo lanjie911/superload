@@ -1,0 +1,16 @@
+el-row(class="rowclaz")
+el-row(class="rowclaz")
+    el-col(:span="6" style="text-align:right;")
+        div(style="line-height:3;") 选择商户
+    el-col(:span="18" style="text-align:left;")
+        el-select(v-model="groupMarketing.uploadMerchantId" placeholder="请选择商户" style="width:210px;margin-left:15px;")
+            el-option(v-for="item in groupMarketing.merchantList" :key="item.merchant_id" :label="item.merchant_name" :value="item.merchant_id")
+el-row(class="rowclaz")
+    el-col(:span="6" style="text-align:right;")
+        div(style="line-height:3") 输入号码
+    el-col(:span="18" style="text-align:left;")
+        el-input(v-model="groupMarketing.uploadFile",placeholder="请输入号码列表", maxlength="32" style="width:210px;margin-left:15px;",type="textarea" autofocus="true")
+el-row
+    el-col(:span="8" style="text-align:right;")
+        el-button(style="" @click="uploadTask") 确定
+    el-col(:span="16" style="text-align:left;")
