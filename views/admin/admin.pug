@@ -46,6 +46,6 @@ block content
                         el-row
                             el-col(:span="24")
                                 el-button(@click="goResetPwd" style="margin-left:130px;") 确定
-                    el-tab-pane(label="群发任务" name="5")
-                        include newmarketing.pug
+                    el-tab-pane(label="个人审批" name="5")
+                        include auditsms.pug
     script(src="/javascripts/business/admin.js")

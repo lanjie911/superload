@@ -17,7 +17,7 @@ el-menu(:default-openeds="['1','2','3']" v-bind:style="{height: asideHeight + 'p
     el-submenu(index="3")
         template(slot="title")
             i(class="el-icon-s-promotion")
-            span 群发管理
+            span 自助群发审批
         el-menu-item-group
-            el-menu-item(index="3-1" @click="gofunc(5)") 新建群发
-            el-menu-item(index="3-2") 群发列表
+            el-menu-item(index="3-1" @click="gofunc(5)") 个人审批列表
+            el-menu-item(index="3-2") 企业审批列表

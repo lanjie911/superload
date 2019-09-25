@@ -25,6 +25,12 @@ let handleReqQryResult = function (resp) {
     return [];
 };
 
+openPic = function(ele){
+    let xsrc = ele.firstChild.src;
+    // alert(xsrc);
+    window.open(xsrc,"ppic");
+}
+
 vInst = new Vue({
     el: "#worksarea",
     data: {
@@ -51,6 +57,13 @@ vInst = new Vue({
             merchantList: [],
             uplodeFile: "",
             uploadMerchantId: 0
+        },
+
+        // 审核自助发短信的列表
+        selfSMSData : {
+            auditPList: [
+                
+            ]
         }
     },
     created: function () {
@@ -104,13 +117,13 @@ vInst = new Vue({
         tabSelected: function (tabObj) {
             let idx = tabObj.index;
             if(5 == idx){
-                // 切换到群发任务
-                // 刷新商户数组
-                axios.get("/task/qrymerchants", {
+                // 切换到审核自助发短信的列表
+                // 刷新个人审核数据
+                axios.get("/task/qrypaudits", {
                     params: {}
                 }).then(function(res){
                     console.log(res);
-                    vInst.groupMarketing.merchantList = res.data.rs;
+                    vInst.selfSMSData.auditPList = res.data.rs;
                 }).catch(resp => {
                     console.log('请求失败：' + resp.status + ',' + resp.statusText);
                 });
@@ -180,6 +193,18 @@ vInst = new Vue({
         uploadTask: function(){
             let merchantId = this.groupMarketing.uploadMerchantId;
             console.log("TO BE DONE...")
+        },
+
+        // 通过个人申请
+        handlePAudit: function(row){
+            axios.post("/task/auditp", {
+                oldPwd: oldPwd,
+                newPwd: newPwd
+            }).then(function (resp) {
+                alert(resp.data.rs);
+            }).catch(resp => {
+                console.log('请求失败：' + resp.status + ',' + resp.statusText);
+            });
         }
     }
 });
