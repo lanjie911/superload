@@ -12,5 +12,4 @@ el-table(border style="width:100%" :data="selfSMSData.auditPList")
     el-table-column(label="提交时间" width="180" prop="created_time" type="date" value-format="yyyy-MM-dd")
     el-table-column(label="审核操作" class="column-title")
         template(slot-scope="scope")
-            el-button(size="mini" @click="handlePAudit(scope.row,1)") 通过
-            el-button(size="mini" type="danger" @click="handlePAudit(scope.row,0)") 拒绝
+            el-button(size="mini" @click="handleAudit(scope.row.real_id,'p')") 处理

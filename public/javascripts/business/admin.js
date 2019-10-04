@@ -63,8 +63,17 @@ vInst = new Vue({
         selfSMSData : {
             auditPList: [
                 
+            ],
+            auditEList: [
+
             ]
-        }
+        },
+
+        adtitle: "审批",
+        dialogVisible: false,
+        auditdesc:"",
+        curr_kind:"",
+        curr_id:0
     },
     created: function () {
         this.uiHeight = document.documentElement.clientHeight;
@@ -127,6 +136,20 @@ vInst = new Vue({
                 }).catch(resp => {
                     console.log('请求失败：' + resp.status + ',' + resp.statusText);
                 });
+                return;
+            }
+            if(6 == idx){
+                // 切换到审核自助发短信的列表
+                // 刷新个人审核数据
+                axios.get("/task/qryeaudits", {
+                    params: {}
+                }).then(function(res){
+                    console.log(res);
+                    vInst.selfSMSData.auditEList = res.data.rs;
+                }).catch(resp => {
+                    console.log('请求失败：' + resp.status + ',' + resp.statusText);
+                });
+                return;
             }
         },
         clearSearchConditions: function () {
@@ -195,13 +218,31 @@ vInst = new Vue({
             console.log("TO BE DONE...")
         },
 
-        // 通过个人申请
-        handlePAudit: function(row){
-            axios.post("/task/auditp", {
-                oldPwd: oldPwd,
-                newPwd: newPwd
-            }).then(function (resp) {
-                alert(resp.data.rs);
+        // 处理申请
+        handleAudit: function(rowid,kind){
+            this.curr_id = rowid;
+            this.curr_kind = kind;
+            this.dialogVisible = true;
+        },
+
+        doAudit: function(opt){
+            let paraOb = {};
+            paraOb.rid = this.curr_id;
+            paraOb.desc = this.auditdesc;
+            paraOb.opt = opt;
+            let aurl = "/task/doaudit";
+            paraOb.kind = this.curr_kind;
+            axios.post(aurl, paraOb).then(function (resp) {
+                alert("操作成功");
+                if("p"==vInst.curr_kind){
+                    vInst.selfSMSData.auditPList = [];
+                    vInst.dialogVisible = false;
+                    vInst.gofunc(5);
+                }else if("e"==vInst.curr_kind){
+                    vInst.selfSMSData.auditEList = [];
+                    vInst.dialogVisible = false;
+                    vInst.gofunc(6);
+                }
             }).catch(resp => {
                 console.log('请求失败：' + resp.status + ',' + resp.statusText);
             });
